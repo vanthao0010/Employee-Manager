@@ -1,23 +1,25 @@
-package com.luvina.la.entity;
-/*
+/**
  * Copyright(C) 2023 Luvina Software Company
  *
  * Employee.java, June 29, 2023 nvthao
  */
-import java.io.Serializable;
+package com.luvina.la.entity;
+
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+/**
+ * Mô tả cấu trúc entity Employee
+ * @author thaonv
+ */
 @Entity
 @Table(name = "employees")
 @Data
-public class Employee implements Serializable {
-
-    private static final long serialVersionUID = 5771173953267484096L;
-
+public class Employee {
     @Id
     @Column(name = "employee_id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,7 @@ public class Employee implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "department_id",referencedColumnName = "department_id",nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "department")
     private Department department;
 
 
@@ -36,6 +38,7 @@ public class Employee implements Serializable {
     private String employeeNameKana;
 
     @Column(name = "employee_birth_date")
+    @JsonFormat(pattern = "yyyy/MM/dd")
     private Date employeeBirthDate;
 
     @Column(name = "employee_email",nullable = false)
@@ -51,6 +54,6 @@ public class Employee implements Serializable {
     private String employeeLoginPassword;
 
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "employee")
     private List<EmployeeCertification> employeeCertifications;
 }

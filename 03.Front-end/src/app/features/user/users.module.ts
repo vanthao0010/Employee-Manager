@@ -6,10 +6,15 @@ import { UserListComponent } from './list/user-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { FormsModule } from '@angular/forms';
+import { UserFormComponent } from './user-form/user-form.component';
+
+
 
 @NgModule({
   declarations: [
     UserListComponent,
+    UserFormComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -17,6 +22,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     CommonModule,
     SharedModule,
     UsersRoutingModule,
+    FormsModule
   ]
 })
 export class UsersModule { }

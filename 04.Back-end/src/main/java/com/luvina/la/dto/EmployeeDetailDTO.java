@@ -2,35 +2,34 @@ package com.luvina.la.dto;
 /**
  * Copyright(C) 2023 Luvina Software Company
  *
- * EmployeeDTO.java, June 30, 2023 nvthao
+ * EmployeeDetailDTO.java, July 08, 2023 nvthao
  */
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Date;
+import java.util.List;
+
 /**
- * class EmployeeDTO mô tả các thuộc tính cần thiết của employee để gửi về client
+ * class EmployeeDTO mô tả các thuộc tính cần thiết của employee để thêm mới nhân viên
  * @author thaonv
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDTO implements Serializable {
+public class EmployeeDetailDTO {
     private Long employeeId;
     private String employeeName;
+    private String employeeNameKana;
     @JsonFormat(pattern = "yyyy/MM/dd")
     private Date employeeBirthDate;
-    private String departmentName;
+    private Long departmentId;
     private String employeeEmail;
     private String employeeTelephone;
-    private String certificateName;
-    @JsonFormat(pattern = "yyyy/MM/dd")
-    private Date certificationEndDate;
-    private BigDecimal employeeCertificationScore;
-
-
+    private String employeeLoginId;
+    private String employeeLoginPassword;
+    List<EmployeeCertificationDTO> certifications;
 }
+
+

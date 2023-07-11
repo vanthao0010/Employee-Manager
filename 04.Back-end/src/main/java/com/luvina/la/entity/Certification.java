@@ -1,13 +1,19 @@
-package com.luvina.la.entity;
-/*
+/**
  * Copyright(C) 2023 Luvina Software Company
  *
  * Certification.java, June 29, 2023 thaonv
  */
+package com.luvina.la.entity;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import javax.persistence.*;
 import java.util.Set;
+
+/**
+ * Mô tả cấu trúc entity Certification
+ * @author thaonv
+ */
 @Entity
 @Table(name = "certifications")
 @Data
@@ -24,6 +30,6 @@ public class Certification {
     private Integer certificationLevel;
 
     @OneToMany(mappedBy = "certification",cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonBackReference(value = "certification")
     private Set<EmployeeCertification> employeeCertifications;
 }
