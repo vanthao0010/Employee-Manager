@@ -4,7 +4,7 @@ export interface Employee {
     employeeBirthDate : string,
     departmentName : string,
     employeeEmail :string,
-    employeePhone :string,
+    employeeTelephone :string,
     certificateName : string,
     certificationEndDate : string,
     employeeCertificationScore : number

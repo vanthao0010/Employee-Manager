@@ -17,4 +17,8 @@ export class DepartmentService {
   getDepartment():Observable<any> {
     return this.httpClient.get<any>(this.REST_API_SERVER,httpOptions)
   }
+  getDepartmentById(id:number):Observable<any> {
+    const url = this.REST_API_SERVER + "/"+id
+    return this.httpClient.get<any>(url,httpOptions)
+  }
 }

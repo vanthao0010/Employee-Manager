@@ -35,6 +35,7 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error) => {
+        console.log(error.error.message)
         return throwError(() => new Error(error?.message));
       })
     );

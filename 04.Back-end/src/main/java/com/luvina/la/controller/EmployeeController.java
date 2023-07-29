@@ -7,14 +7,19 @@ package com.luvina.la.controller;
 import com.luvina.la.common.Response;
 import com.luvina.la.dto.EmployeeDTO;
 import com.luvina.la.dto.EmployeeDetailDTO;
+
 import com.luvina.la.entity.Employee;
-import com.luvina.la.entity.EmployeeCertification;
+import com.luvina.la.exception.ValidateException;
 import com.luvina.la.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+
+
 /**
  * Controller của Employee
  */
@@ -40,7 +45,7 @@ public class EmployeeController {
                     @RequestParam(value = "employee_name",required = false) String employee_name,
                     @RequestParam(value = "department_id",required = false) Long department_id,
                     @RequestParam(value = "offset",defaultValue = "0") int offset,
-                    @RequestParam(value = "limit",defaultValue = "5") int limit,
+                    @RequestParam(value = "limit",defaultValue = "20") int limit,
                     @RequestParam(value = "ord_employee_name", defaultValue = "ASC") String ord_employee_name,
                     @RequestParam(value = "ord_certification_name", defaultValue = "ASC") String ord_certification_name,
                     @RequestParam(value = "ord_end_date", defaultValue = "ASC") String ord_end_date) {
@@ -56,10 +61,27 @@ public class EmployeeController {
      */
     @CrossOrigin
     @PostMapping
-    public void addEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO) {
-        iEmployeeService.addEmployee(employeeDetailDTO);
+    public ResponseEntity<Map<String, Object>> addEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO) {
+
+        try {
+            Employee employee = iEmployeeService.addEmployee(employeeDetailDTO);
+            Map<String, Object> response = new HashMap<>();
+            response.put("code", "200");
+            response.put("employeeId", employee.getEmployeeId());
+            Map<String, Object> message = new HashMap<>();
+            message.put("code","MSG001");
+            String [] params = new String[1];
+            params[0] = "ユーザの登録が完了しました。";
+            message.put("params",params);
+            response.put("message",message);
+            return ResponseEntity.ok(response);
+        } catch (ValidateException e){
+            Map<String, Object> response = new HashMap<>();
+            response.put("code", "500");
+            Map<String, Object> message = e.getResponse();
+            response.put("message",message);
+            return ResponseEntity.badRequest().body(response);
+        }
     }
-
-
 
 }

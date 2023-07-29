@@ -9,7 +9,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Mô tả cấu trúc entity chi tiết chứng chỉ nhân viên
  * @author thaonv
@@ -17,8 +20,9 @@ import lombok.Data;
 @Entity
 @Table(name = "employee_certifications")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeCertification {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_certification_id")

@@ -39,4 +39,17 @@ public class DepartmentServiceImpl implements IDepartmentService {
         }
         return departments;
     }
+
+    /**
+     *
+     * @param id id phòng ban truyền vào
+     * @return phòng ban trong database
+     */
+    @Override
+    public DepartmentDTO getDepartmentById(Long id) {
+        DepartmentDTO department = new DepartmentDTO();
+        department.setDepartmentId(id);
+        department.setDepartmentName(departmentRepository.findById(id).get().getDepartmentName());
+        return department;
+    }
 }

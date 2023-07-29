@@ -37,4 +37,17 @@ public class CertificationServiceImpl implements ICertificationService {
         }
         return listCertification;
     }
+
+    /**
+     * service gọi đến repository lấy dữ liệu từ database
+     * @param id id certification
+     * @return certificationDTO theo id
+     */
+    @Override
+    public CertificationDTO getCertificationById(Long id) {
+        CertificationDTO certification = new CertificationDTO();
+        certification.setCertificationId(certificationRepository.findById(id).get().getCertificationId());
+        certification.setCertificationName(certificationRepository.findById(id).get().getCertificationName());
+        return certification;
+    }
 }

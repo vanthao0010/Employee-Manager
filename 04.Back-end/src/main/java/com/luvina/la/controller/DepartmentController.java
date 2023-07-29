@@ -12,9 +12,8 @@ import com.luvina.la.service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 /**
  * Controller khai báo đầu APi gọi đến Department Service lấy ra danh sách phòng ban
@@ -32,5 +31,14 @@ public class DepartmentController {
     ResponseEntity<Response> getAll() {
         List<DepartmentDTO> listDepartment = iDepartmentService.getAll();
         return ResponseEntity.ok(new Response(HttpStatus.OK.toString(),listDepartment.size(),listDepartment));
+    }
+    /**
+     * API lấy ra department theo id
+     * @param id id gửi từ client gửi lên
+     * @return phòng ban tìm được
+     */
+    @GetMapping("{id}")
+    DepartmentDTO getDepartmentById(@PathVariable Long id) {
+        return iDepartmentService.getDepartmentById(id);
     }
 }

@@ -25,8 +25,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      */
     Optional<Employee> findByEmployeeLoginId(String employeeLoginId);
     Optional<Employee> findByEmployeeId(Long employeeId);
-
-
     /**
      * method giao tiếp database lấy về dữ liệu theo name hoặc phòng ban
      * nếu không truyền vào name hoặc departmentid thì lấy về tất cả
@@ -34,14 +32,17 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      * nếu chỉ truyền vào departmentid thì tìm theo department
      * nếu truyền vào cả 2 thì tìm theo cả 2 thuộc tính
      */
-    @Query("SELECT new com.luvina.la.dto.EmployeeDTO(e.employeeId, e.employeeName, e.employeeBirthDate, " +
-            " d.departmentName, e.employeeEmail, e.employeeTelephone, c.certificationName, ec.certificationEndDate,ec.employeeCertificationScore) " +
-                " FROM Employee e " +
-                "INNER JOIN Department d ON e.department.departmentId = d.departmentId " +
+    @Query(value = "SELECT new com.luvina.la.dto.EmployeeDTO(e.employeeId, e.employeeName, e.employeeBirthDate, " +
+            " d.departmentName, e.employeeEmail, e.employeeTelephone, " +
+                "c.certificationName, ec.certificationEndDate,ec.employeeCertificationScore) " +
+                "FROM Employee e INNER JOIN Department d ON e.department.departmentId = d.departmentId " +
                 "LEFT JOIN EmployeeCertification ec ON e.employeeId = ec.employee.employeeId " +
                 "LEFT JOIN Certification c ON ec.certification.certificationId = c.certificationId " +
-            "Where ( :employeeName IS NULL OR e.employeeName LIKE %:employeeName% ) AND ( :departmentId IS NULL OR d.departmentId =:departmentId ) " )
-    Page<EmployeeDTO> searchEmployeeByNameOrDepartmentIdAndSort(@Param("employeeName") String employeeName , @Param("departmentId") Long departmentId, Pageable pageable);
+            "Where ( :employeeName IS NULL OR e.employeeName LIKE CONCAT('%', :employeeName, '%') ) " +
+            "AND ( :departmentId IS NULL OR d.departmentId =:departmentId ) ")
+    Page<EmployeeDTO> searchEmployeeByNameOrDepartmentIdAndSort(@Param("employeeName") String employeeName ,
+                                                                @Param("departmentId") Long departmentId,
+                                                                Pageable pageable);
 
 
 }

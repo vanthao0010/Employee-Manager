@@ -17,4 +17,6 @@ import java.util.List;
 @Service
 public interface ICertificationService {
     public List<CertificationDTO> listCertifications();
+
+    CertificationDTO getCertificationById(Long id);
 }

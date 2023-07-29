@@ -1,9 +1,10 @@
-package com.luvina.la.dto;
 /**
  * Copyright(C) 2023 Luvina Software Company
  *
  * EmployeeDetailDTO.java, July 08, 2023 nvthao
  */
+package com.luvina.la.dto;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +23,7 @@ public class EmployeeDetailDTO {
     private Long employeeId;
     private String employeeName;
     private String employeeNameKana;
-    @JsonFormat(pattern = "yyyy/MM/dd")
-    private Date employeeBirthDate;
+    private String employeeBirthDate;
     private Long departmentId;
     private String employeeEmail;
     private String employeeTelephone;

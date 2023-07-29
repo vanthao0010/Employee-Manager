@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { UserListComponent } from './list/user-list.component';
@@ -8,6 +9,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule } from '@angular/forms';
 import { UserFormComponent } from './user-form/user-form.component';
+import { ConfirmComponent } from './confirm/confirm.component';
+import { DatePipe } from '@angular/common';
+import { CompleteComponent } from './complete/complete.component';
 
 
 
@@ -15,6 +19,8 @@ import { UserFormComponent } from './user-form/user-form.component';
   declarations: [
     UserListComponent,
     UserFormComponent,
+    ConfirmComponent,
+    CompleteComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -22,7 +28,11 @@ import { UserFormComponent } from './user-form/user-form.component';
     CommonModule,
     SharedModule,
     UsersRoutingModule,
+    ReactiveFormsModule,
     FormsModule
+  ],
+  providers :  [
+    DatePipe
   ]
 })
 export class UsersModule { }

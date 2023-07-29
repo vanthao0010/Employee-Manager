@@ -15,4 +15,8 @@ export class HeaderComponent {
     this.router.navigate(['login']);
     return false;
   }
+  //Cuộn màn hình lên top
+  scrollTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }

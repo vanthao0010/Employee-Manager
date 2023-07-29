@@ -7,6 +7,7 @@
 package com.luvina.la.service;
 
 import com.luvina.la.dto.DepartmentDTO;
+import com.luvina.la.entity.Department;
 import org.springframework.stereotype.Service;
 import java.util.List;
 /**
@@ -16,6 +17,8 @@ import java.util.List;
 @Service
 public interface IDepartmentService {
     public List<DepartmentDTO> getAll();
+
+    public DepartmentDTO getDepartmentById(Long id);
 
 
 }

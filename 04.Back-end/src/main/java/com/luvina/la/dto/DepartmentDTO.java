@@ -6,12 +6,15 @@ package com.luvina.la.dto;
  */
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * class EmployeeDTO mô tả các thuộc tính cần thiết của department
  * @author thaonv
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class DepartmentDTO {
     private Long departmentId;
     private String departmentName;
