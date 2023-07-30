@@ -1,7 +1,7 @@
 import { EmployeeCertification } from "./employeeCertification";
 
 export interface EmployeeDetail {
-    employeeId : number,
+    employeeId? : number,
     employeeName : string,
     employeeNameKana : string,
     employeeBirthDate : string,

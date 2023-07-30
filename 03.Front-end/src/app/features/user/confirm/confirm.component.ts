@@ -26,6 +26,7 @@ export class ConfirmComponent {
   certificationStartDate! : string
   certificationEndDate! : string
   certificationScore! : number
+  errorMessage ! : ApiResponse
   constructor(private departmentService : DepartmentService,
               private certificationService : CertificationService,
               private employeeService : EmployeeService,
@@ -47,7 +48,6 @@ export class ConfirmComponent {
       })
       //lấy certification theo id gửi trong router
       if(this.employeeDetail.certifications.length != 0) {
-        console.log("c")
         this.certificationService.getCertificationById(this.employeeDetail.certifications[0].certificationId).subscribe((data) =>{
         this.certificationName = data.certificationName
         this.certificationEndDate = this.employeeDetail.certifications[0].certificationEndDate
@@ -56,25 +56,22 @@ export class ConfirmComponent {
         })
       }
     }
-
   }
   //function bắt sự kiện back về ADM004
   backToFormAddOrEdit() {
     this.router.navigate(["/user/add"],{state : {data : this.employeeDetail}})
   }
   addEmployee() {
-    this.employeeService.addEmployee(this.employeeDetail).subscribe(
-     { next : (data : ApiResponse) => {
-        if(data.code === "200") {
-          this.router.navigate(["/user/complete"],{state: {data : "ユーザの登録が完了しました。"}})
-        }else {
-          this.router.navigate(["/user/add"])
+    this.employeeService.addEmployee(this.employeeDetail).subscribe({
+        next: (data) => {
+          this.router.navigate(['/uer/complete'],{state : {data : "thành công"}})
+        },
+        error: (error) => {
+          this.router.navigate(['/user/add'],{state : {data : error.error.message.params}})
         }
-     }
-   
-
-    }
-  )
+      }
+    )
+  
      
   }
 

@@ -5,14 +5,16 @@ import {
   HttpEvent,
   HttpInterceptor,
   HTTP_INTERCEPTORS,
+  HttpErrorResponse
 } from "@angular/common/http";
 import { Observable, throwError, } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { TokenUtils } from '../utils/token.utils';
+import { EmployeeService } from "src/app/service/employee.service";
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
-
+  constructor(private employeeService : EmployeeService) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = sessionStorage.getItem("access_token");
     if (token) {
@@ -34,9 +36,11 @@ export class AuthInterceptorService implements HttpInterceptor {
     request = this.addContentType(request, 'application/json');
 
     return next.handle(request).pipe(
-      catchError((error) => {
-        console.log(error.error.message)
-        return throwError(() => new Error(error?.message));
+      catchError((error : HttpErrorResponse ) => {
+        if(error.status == 400) {
+          this.employeeService.setError(error.error)
+        }
+        return throwError(error)
       })
     );
   }

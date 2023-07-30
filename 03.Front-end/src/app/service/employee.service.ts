@@ -17,7 +17,7 @@ const httpOptions = {
 })
 export class EmployeeService {
   private REST_API_SERVER = "http://localhost:8085/employee";
-  private error: any;
+  private error!: ApiResponse;
   constructor(private httpClient: HttpClient) { }
   public getEmployee(): Observable<any> {
     const url = this.REST_API_SERVER

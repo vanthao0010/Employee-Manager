@@ -62,7 +62,6 @@ public class EmployeeController {
     @CrossOrigin
     @PostMapping
     public ResponseEntity<Map<String, Object>> addEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO) {
-
         try {
             Employee employee = iEmployeeService.addEmployee(employeeDetailDTO);
             Map<String, Object> response = new HashMap<>();
@@ -78,7 +77,12 @@ public class EmployeeController {
         } catch (ValidateException e){
             Map<String, Object> response = new HashMap<>();
             response.put("code", "500");
-            Map<String, Object> message = e.getResponse();
+            Map<String, Object> error = e.getResponse();
+            String code = error.keySet().iterator().next();
+            String params = error.get(code).toString();
+            Map<String, Object> message = new HashMap<>();
+            message.put("code",code);
+            message.put("params",params);
             response.put("message",message);
             return ResponseEntity.badRequest().body(response);
         }

@@ -83,27 +83,28 @@ export class UserFormComponent {
     this.certificationService.getCertification().subscribe((data) =>{
       this.listCertification = data.object
     })
-
-    this.error=this.employeeService.getError();
-
-  
+    
     // kiểm tra state trong router có rỗng hay không nếu không thì gán giá trị các formControlName để hiển thị lên template
     if(history.state.data) {
-      this.employeeDetail = history.state.data
-      console.log(this.employeeDetail)
-      this.employeeForm.get('employeeLoginId').setValue(this.employeeDetail.employeeLoginId)
-      this.employeeForm.get('employeeName').setValue(this.employeeDetail.employeeName)
-      this.employeeForm.get('departmentId').setValue(this.employeeDetail.departmentId)
-      this.employeeForm.get('employeeNameKana').setValue(this.employeeDetail.employeeNameKana)
-      this.employeeForm.get('employeeEmail').setValue(this.employeeDetail.employeeEmail)
-      this.employeeForm.get('employeeTelephone').setValue(this.employeeDetail.employeeTelephone)
-      this.employeeForm.get('employeeBirthDate').setValue(new Date(this.employeeDetail.employeeBirthDate))
-      this.employeeForm.get('employeeLoginPassword').setValue(this.employeeDetail.employeeLoginPassword)
-      if(this.employeeDetail.certifications.length != 0) {
-        this.employeeForm.get('certifications.certificationId').setValue(this.employeeDetail.certifications[0].certificationId)
-        this.employeeForm.get('certifications.certificationStartDate').setValue(new Date(this.employeeDetail.certifications[0].certificationStartDate))
-        this.employeeForm.get('certifications.certificationEndDate').setValue(new Date(this.employeeDetail.certifications[0].certificationStartDate))
-        this.employeeForm.get('certifications.employeeCertificationScore').setValue(this.employeeDetail.certifications[0].employeeCertificationScore)
+      if(history.state.data instanceof String) {
+        this.error = history.state.data
+      } else {
+        this.employeeDetail = history.state.data
+        console.log(this.employeeDetail)
+        this.employeeForm.get('employeeLoginId').setValue(this.employeeDetail.employeeLoginId)
+        this.employeeForm.get('employeeName').setValue(this.employeeDetail.employeeName)
+        this.employeeForm.get('departmentId').setValue(this.employeeDetail.departmentId)
+        this.employeeForm.get('employeeNameKana').setValue(this.employeeDetail.employeeNameKana)
+        this.employeeForm.get('employeeEmail').setValue(this.employeeDetail.employeeEmail)
+        this.employeeForm.get('employeeTelephone').setValue(this.employeeDetail.employeeTelephone)
+        this.employeeForm.get('employeeBirthDate').setValue(new Date(this.employeeDetail.employeeBirthDate))
+        this.employeeForm.get('employeeLoginPassword').setValue(this.employeeDetail.employeeLoginPassword)
+        if(this.employeeDetail.certifications.length != 0) {
+          this.employeeForm.get('certifications.certificationId').setValue(this.employeeDetail.certifications[0].certificationId)
+          this.employeeForm.get('certifications.certificationStartDate').setValue(new Date(this.employeeDetail.certifications[0].certificationStartDate))
+          this.employeeForm.get('certifications.certificationEndDate').setValue(new Date(this.employeeDetail.certifications[0].certificationStartDate))
+          this.employeeForm.get('certifications.employeeCertificationScore').setValue(this.employeeDetail.certifications[0].employeeCertificationScore)
+        }
       }
     } 
   }
@@ -326,7 +327,6 @@ export class UserFormComponent {
     const certificationId = this.employeeForm.get('certifications.certificationId').value
     var certification : EmployeeCertification[] = []
     if(certificationId) {
-      console.log("abc")
       const startDate = this.employeeForm.get('certifications.certificationStartDate').value
       const endDate = this.employeeForm.get('certifications.certificationEndDate').value
       certification  = [{
@@ -354,7 +354,6 @@ export class UserFormComponent {
         if(certification.length != 0) {
           if(this.checkCertificationStartDate && this.checkCertificationEndDate && this.checkCertificationScore) {
             const employeeDetail : EmployeeDetail = {
-              employeeId:0,
               employeeName : employeeName,
               employeeNameKana : employeeNameKana,
               employeeBirthDate : employeeBirthDate,
