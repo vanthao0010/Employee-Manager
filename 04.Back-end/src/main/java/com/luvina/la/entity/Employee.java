@@ -11,9 +11,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Mô tả cấu trúc entity Employee
@@ -21,9 +19,10 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "employees")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Employee {
     @Id
     @Column(name = "employee_id", unique = true)
@@ -62,17 +61,4 @@ public class Employee {
     @JsonManagedReference(value = "employee")
     private List<EmployeeCertification> employeeCertifications;
 
-    public Employee(Long employeeId, Department department, String employeeName, String employeeNameKana,
-                    Date employeeBirthDate, String employeeEmail, String employeeTelephone, String employeeLoginId,
-                    String employeeLoginPassword) {
-        this.employeeId = employeeId;
-        this.department = department;
-        this.employeeName = employeeName;
-        this.employeeNameKana = employeeNameKana;
-        this.employeeBirthDate = employeeBirthDate;
-        this.employeeEmail = employeeEmail;
-        this.employeeTelephone = employeeTelephone;
-        this.employeeLoginId = employeeLoginId;
-        this.employeeLoginPassword = employeeLoginPassword;
-    }
 }

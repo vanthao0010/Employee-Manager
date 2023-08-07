@@ -75,6 +75,10 @@ export class EmployeeService {
   public addEmployee(data: EmployeeDetail): Observable<ApiResponse> {
     return this.httpClient.post<ApiResponse>(this.REST_API_SERVER, data, httpOptions)
   }
+  public viewEmployeeDetail(employeeId : number) : Observable<any> {
+    const url = this.REST_API_SERVER + "/" + employeeId
+    return this.httpClient.get<any>(url,httpOptions)
+  }
 
   public setError(data: any) {
     this.error = data;

@@ -138,6 +138,7 @@ export class UserListComponent {
     return ordSort == "ASC"
   }
   viewDetailEmployee(employeeId:number) {
+   this.router.navigate(["/user/detail"],{state : {data : employeeId}})
   }
 
 }

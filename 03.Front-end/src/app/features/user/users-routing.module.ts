@@ -6,6 +6,7 @@ import { AuthorizeGuard } from '../../shared/auth/authorize.guard';
 import { UserFormComponent } from './user-form/user-form.component';
 import { ConfirmComponent } from './confirm/confirm.component';
 import { CompleteComponent } from './complete/complete.component';
+import { DetailComponent } from './detail/detail.component';
 
 const routes: Routes = [
   { path: 'user', redirectTo: 'user/list', pathMatch: 'full'},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'user/add',component: UserFormComponent, canActivate: [AuthorizeGuard]},
   {path : 'user/confirm', component: ConfirmComponent,canActivate: [AuthorizeGuard]},
   {path: 'user/complete',component: CompleteComponent,canActivate: [AuthorizeGuard]},
+  {path: 'user/detail',component: DetailComponent,canActivate: [AuthorizeGuard]},
   { path: '**', component: SystemErrorComponent },
 ];
 

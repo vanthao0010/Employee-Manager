@@ -12,6 +12,7 @@ import { UserFormComponent } from './user-form/user-form.component';
 import { ConfirmComponent } from './confirm/confirm.component';
 import { DatePipe } from '@angular/common';
 import { CompleteComponent } from './complete/complete.component';
+import { DetailComponent } from './detail/detail.component';
 
 
 
@@ -21,6 +22,7 @@ import { CompleteComponent } from './complete/complete.component';
     UserFormComponent,
     ConfirmComponent,
     CompleteComponent,
+    DetailComponent,
   ],
   imports: [
     BrowserAnimationsModule,

@@ -7,6 +7,10 @@ package com.luvina.la.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.*;
 /**
@@ -15,7 +19,8 @@ import java.util.*;
  */
 @Entity
 @Table(name="departments")
-@Data
+@Getter
+@Setter
 public class Department {
     @Id
     @Column(name = "department_id")
@@ -27,6 +32,7 @@ public class Department {
 
     @OneToMany(mappedBy = "department",cascade = CascadeType.ALL)
     @JsonManagedReference(value = "department")
+    @ToString.Exclude
     private List<Employee> employee;
 
 

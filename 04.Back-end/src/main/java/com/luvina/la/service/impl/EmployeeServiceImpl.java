@@ -5,9 +5,7 @@
  */
 package com.luvina.la.service.impl;
 import com.luvina.la.Validation.ValidateParameter;
-import com.luvina.la.dto.EmployeeCertificationDTO;
-import com.luvina.la.dto.EmployeeDTO;
-import com.luvina.la.dto.EmployeeDetailDTO;
+import com.luvina.la.dto.*;
 import com.luvina.la.entity.Certification;
 import com.luvina.la.entity.Department;
 import com.luvina.la.entity.Employee;
@@ -24,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -128,7 +127,17 @@ public class EmployeeServiceImpl implements IEmployeeService {
      * @return ném ra ngoại lệ nếu có nếu không có ngoại lệ thì trả về  employee vừa thêm mới
      */
     @Override
-    public Employee addEmployee(EmployeeDetailDTO employeeDetailDTO) {
+    @Transactional
+    public Employee addEmployee(EmployeeDetailDTO employeeDetailDTO, Long employeeId) {
+        Employee employeeUpdate = new Employee();
+        if(employeeId != null) {
+            Optional<Employee> employeeOptional = employeeRepository.findByEmployeeId(employeeId);
+            if(employeeOptional.isPresent()) {
+                employeeUpdate = employeeOptional.get();
+            } else {
+                throw new RuntimeException("Id khong ton tai");
+            }
+        }
         ValidateParameter validateParameter = new ValidateParameter(); //
         Map<String, Object> response = new HashMap<>();
         // check validate parameter departmentId
@@ -146,13 +155,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
         }
         //check validate parameter employee name katakana
         String employeeNameKana = employeeDetailDTO.getEmployeeNameKana();
-        response = validateParameter.validateEmployeeNameKana(employeeNameKana);
-        if(!response.isEmpty()) {
-            throw new ValidateException(response);
-        }
         //check validate parameter employee birth date
         String employeeBirthDate = employeeDetailDTO.getEmployeeBirthDate();
-        System.out.println(employeeBirthDate);
         response = validateParameter.validateEmployeeBirthDate(employeeBirthDate);
         if(!response.isEmpty()) {
             throw new ValidateException(response);
@@ -173,6 +177,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         String employeeLoginId = employeeDetailDTO.getEmployeeLoginId();
         response = validateParameter
                 .validateEmployeeLoginId(employeeLoginId, employeeRepository.findByEmployeeLoginId(employeeLoginId));
+        System.out.println(response);
         if(!response.isEmpty()) {
             throw new ValidateException(response);
         }
@@ -182,57 +187,131 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if(!response.isEmpty()) {
             throw new ValidateException(response);
         }
-
-        Employee employee = new Employee(null,department.get(),employeeName,employeeNameKana,
-                                        convertStrToDate(employeeBirthDate), employeeEmail,employeeTelephone,
-                                        employeeLoginId,employeePassword);
+        employeeUpdate.setDepartment(department.get());
+        employeeUpdate.setEmployeeName(employeeName);
+        employeeUpdate.setEmployeeNameKana(employeeNameKana);
+        employeeUpdate.setEmployeeBirthDate(convertStrToDate(employeeBirthDate));
+        employeeUpdate.setEmployeeEmail(employeeEmail);
+        employeeUpdate.setEmployeeTelephone(employeeTelephone);
+        employeeUpdate.setEmployeeLoginId(employeeLoginId);
+        employeeUpdate.setEmployeeLoginPassword(employeePassword);
         // thêm mới employee vào database
-        Employee savedEmployee = employeeRepository.save(employee);
-        List<EmployeeCertificationDTO> employeeCertificationDTOList = employeeDetailDTO.getCertifications();
-        //check có tồn tại thông tin chứng chỉ hay không
-        if(!employeeCertificationDTOList.isEmpty()) {
-            for(EmployeeCertificationDTO e:employeeCertificationDTOList) {
-                //check validate parameter certification id
-                Long certificationId = e.getCertificationId();
-                Optional<Certification> certification = certificationRepository.findById(certificationId);
-                response = validateParameter.
-                        validateCertificationId(certificationId, certification);
-                if(!response.isEmpty()) {
-                    throw new ValidateException(response);
-                }
-                //check validate parameter employee start date
-                String certificationStartDate = e.getCertificationStartDate();
-                response = validateParameter.validateCertificationStartDate(certificationStartDate);
-                if(!response.isEmpty()) {
-                    throw new ValidateException(response);
-                }
-                //check validate parameter end date
-                String certificationEndDate = e.getCertificationEndDate();
-                response = validateParameter.validateCertificationEndDate(certificationEndDate);
-                if(!response.isEmpty()) {
-                    throw new ValidateException(response);
-                }
-                //check end date co lon hon start date
-                response = validateParameter.checkEndDateGreaterStartDate(convertStrToDate(certificationEndDate),
-                                                                        convertStrToDate(certificationStartDate));
-                if(!response.isEmpty()) {
-                    throw new ValidateException(response);
-                }
-                //check validate parameter employee certification score
-                BigDecimal certificationScore = e.getEmployeeCertificationScore();
-                response = validateParameter.validateScore(certificationScore);
-                if(!response.isEmpty()) {
-                    throw new ValidateException(response);
-                }
-                EmployeeCertification employeeCertification = new EmployeeCertification(null,employee,
-                                                                certification.get(),
-                                                                convertStrToDate(certificationStartDate),
-                                                                convertStrToDate(certificationEndDate),
-                                                                certificationScore);
-                employeeCertificationRepository.save(employeeCertification);
+        Employee savedEmployee = employeeRepository.save(employeeUpdate);
+//        List<EmployeeCertificationDTO> employeeCertificationDTOList = employeeDetailDTO.getCertifications();
+//        //check có tồn tại thông tin chứng chỉ hay không
+//        if(employeeCertificationDTOList != null) {
+//            for(EmployeeCertificationDTO e:employeeCertificationDTOList) {
+//                //check validate parameter certification id
+//                Long certificationId = e.getCertificationId();
+//                Optional<Certification> certification = certificationRepository.findById(certificationId);
+//                response = validateParameter.
+//                        validateCertificationId(certificationId, certification);
+//                if(!response.isEmpty()) {
+//                    throw new ValidateException(response);
+//                }
+//                //check validate parameter employee start date
+//                String certificationStartDate = e.getCertificationStartDate();
+//                response = validateParameter.validateCertificationStartDate(certificationStartDate);
+//                if(!response.isEmpty()) {
+//                    throw new ValidateException(response);
+//                }
+//                //check validate parameter end date
+//                String certificationEndDate = e.getCertificationEndDate();
+//                response = validateParameter.validateCertificationEndDate(certificationEndDate);
+//                if(!response.isEmpty()) {
+//                    throw new ValidateException(response);
+//                }
+//                //check end date co lon hon start date
+//                response = validateParameter.checkEndDateGreaterStartDate(convertStrToDate(certificationEndDate),
+//                                                                        convertStrToDate(certificationStartDate));
+//                if(!response.isEmpty()) {
+//                    throw new ValidateException(response);
+//                }
+//                //check validate parameter employee certification score
+//                BigDecimal certificationScore = e.getEmployeeCertificationScore();
+//                response = validateParameter.validateScore(certificationScore);
+//                if(!response.isEmpty()) {
+//                    throw new ValidateException(response);
+//                }
+//                EmployeeCertification employeeCertification = new EmployeeCertification(null,employeeUpdate,
+//                                                                certification.get(),
+//                                                                convertStrToDate(certificationStartDate),
+//                                                                convertStrToDate(certificationEndDate),
+//                                                                certificationScore);
+//                employeeCertificationRepository.save(employeeCertification);
+//            }
+//        }
+        List<EmployeeCertification> certifications = employeeCertificationRepository.findByEmployee(employeeUpdate);
+        System.out.println(certifications==null);
+        List<EmployeeCertificationDTO> certificationDTOs = employeeDetailDTO.getCertifications();
+        System.out.println(certificationDTOs==null);
+        if(certifications == null) {
+            if(certificationDTOs != null) {
+                EmployeeCertificationDTO employeeCertificationDTO = certificationDTOs.get(0);
+                Date startDate = convertStrToDate(employeeCertificationDTO.getCertificationStartDate());
+                Date endDate = convertStrToDate(employeeCertificationDTO.getCertificationEndDate());
+                BigDecimal score = employeeCertificationDTO.getEmployeeCertificationScore();
+                Certification certification = certificationRepository.findByCertificationId(
+                        employeeCertificationDTO.getCertificationId()).get();
+                certifications.add(new EmployeeCertification(
+                        null,employeeUpdate, certification, startDate, endDate, score));
+                employeeCertificationRepository.saveAll(certifications);
+            }
+        } else {
+            if(certificationDTOs == null) {
+                employeeCertificationRepository.deleteAllInBatch(certifications);
+            } else {
+                EmployeeCertification certification = certifications.get(0);
+                EmployeeCertificationDTO employeeCertificationDTO = certificationDTOs.get(0);
+                certification.setCertification(certificationRepository.
+                        findByCertificationId(employeeCertificationDTO.getCertificationId()).get());
+                certification.setEmployee(employeeUpdate);
+                certification.setCertificationStartDate(convertStrToDate(employeeCertificationDTO.getCertificationStartDate()));
+                certification.setCertificationEndDate(convertStrToDate(employeeCertificationDTO.getCertificationEndDate()));
+                certification.setEmployeeCertificationScore(employeeCertificationDTO.getEmployeeCertificationScore());
+                employeeCertificationRepository.save(certification);
             }
         }
         return savedEmployee;
+    }
+
+
+
+    @Override
+    public EmployeeViewDTO viewEmployeeDetail(Long employeeId) {
+        Employee employee = employeeRepository.findByEmployeeId(employeeId).get();
+        EmployeeViewDTO employeeDetail = new EmployeeViewDTO();
+        if(employee == null) {
+            Map<String, Object> errorMessage = new HashMap<>();
+            errorMessage.put("error","Id not found");
+            throw new ValidateException(errorMessage);
+        } else {
+            employeeDetail.setEmployeeId(employee.getEmployeeId());
+            employeeDetail.setEmployeeName(employee.getEmployeeName());
+            employeeDetail.setEmployeeBirthDate(employee.getEmployeeBirthDate());
+            employeeDetail.setDepartmentId(employee.getDepartment().getDepartmentId());
+            employeeDetail.setDepartmentName(employee.getDepartment().getDepartmentName());
+            employeeDetail.setEmployeeEmail(employee.getEmployeeEmail());
+            employeeDetail.setEmployeeTeleplone(employee.getEmployeeTelephone());
+            employeeDetail.setEmployeeNameKana(employee.getEmployeeNameKana());
+            employeeDetail.setEmployeeLoginId(employee.getEmployeeLoginId());
+            List<EmployeeCertification> certifications = employeeCertificationRepository.findByEmployee(employee);
+            List<CertificationViewDTO> employeeCertifications = new ArrayList<>();
+            if(!certifications.isEmpty()) {
+                for(EmployeeCertification c : certifications) {
+                    Long certificationId = c.getCertification().getCertificationId();
+                    String certificationName = c.getCertification().getCertificationName();
+                    Date startDate = c.getCertificationStartDate();
+                    Date endDate = c.getCertificationEndDate();
+                    BigDecimal score = c.getEmployeeCertificationScore();
+                    employeeCertifications.add(
+                            new CertificationViewDTO(certificationId,certificationName,startDate,endDate,score));
+                }
+            }
+            employeeDetail.setCertifications(employeeCertifications);
+        }
+
+        return employeeDetail;
     }
 
     /**

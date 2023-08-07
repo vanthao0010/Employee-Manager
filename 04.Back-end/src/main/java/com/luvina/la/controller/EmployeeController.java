@@ -8,6 +8,7 @@ import com.luvina.la.common.Response;
 import com.luvina.la.dto.EmployeeDTO;
 import com.luvina.la.dto.EmployeeDetailDTO;
 
+import com.luvina.la.dto.EmployeeViewDTO;
 import com.luvina.la.entity.Employee;
 import com.luvina.la.exception.ValidateException;
 import com.luvina.la.service.IEmployeeService;
@@ -25,6 +26,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/employee")
+@CrossOrigin
 public class EmployeeController {
     @Autowired
     IEmployeeService iEmployeeService;
@@ -39,7 +41,6 @@ public class EmployeeController {
      * @param ord_end_date điều kiện search theo ngày hết hạn giá trị ban đầu ASC sắp xếp tăng dần
      * @return mã code, tổng số bản ghi và list EmployeeDTO
      */
-    @CrossOrigin
     @GetMapping
     ResponseEntity<Response> searchPagingAndSort(
                     @RequestParam(value = "employee_name",required = false) String employee_name,
@@ -59,11 +60,11 @@ public class EmployeeController {
      * API thêm mới nhân viên
      * @param employeeDetailDTO thông tin nhân viên truyền từ client
      */
-    @CrossOrigin
     @PostMapping
-    public ResponseEntity<Map<String, Object>> addEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO) {
+    public ResponseEntity<Map<String, Object>> addEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO,
+                                                           @RequestParam(required = false) Long employeeId) {
         try {
-            Employee employee = iEmployeeService.addEmployee(employeeDetailDTO);
+            Employee employee = iEmployeeService.addEmployee(employeeDetailDTO,null);
             Map<String, Object> response = new HashMap<>();
             response.put("code", "200");
             response.put("employeeId", employee.getEmployeeId());
@@ -87,5 +88,34 @@ public class EmployeeController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    @PutMapping("{employeeId}")
+    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO,
+                                                           @PathVariable Long employeeId) {
+        try {
+            Employee employee = iEmployeeService.addEmployee(employeeDetailDTO,employeeId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("code", "200");
+            response.put("employeeId", employee.getEmployeeId());
+            Map<String, Object> message = new HashMap<>();
+            message.put("code","MSG001");
+            String [] params = new String[1];
+            params[0] = "ユーザの登録が完了しました。";
+            message.put("params",params);
+            response.put("message",message);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @GetMapping("{employeeId}")
+    public ResponseEntity<?> findEmployeeById(@PathVariable Long employeeId) {
+        try {
+            EmployeeViewDTO employeeDetail = iEmployeeService.viewEmployeeDetail(employeeId);
+            return ResponseEntity.ok().body(employeeDetail);
+        }catch (ValidateException e) {
+            return ResponseEntity.badRequest().body(e.getResponse());
+        }
+    }
+
 
 }

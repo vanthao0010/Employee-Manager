@@ -1,10 +1,4 @@
-/**
- * Copyright(C) 2023 Luvina Software Company
- *
- * ValidateParameter.java, July 23, 2023 nvthao
- */
 package com.luvina.la.Validation;
-
 import com.luvina.la.entity.Certification;
 import com.luvina.la.entity.Department;
 import com.luvina.la.entity.Employee;
@@ -53,24 +47,6 @@ public class ValidateParameter {
             response.put("ER001","[氏名] " + ER001);
         }else if(employeeName.length() > 125) {
             response.put("ER006","[氏名] " + ER006);
-        }
-        return response;
-    }
-    /**
-     * method validate employeeNameKana
-     * @param employeeNameKana employeeName gửi lên từ client
-     * @return Map<String, Object> chứa mã code của lỗi và thông báo lỗi
-     */
-    public Map<String, Object> validateEmployeeNameKana(String employeeNameKana) {
-        Map<String, Object> response = new HashMap<>();
-        String pattern = "^[\\u30A0-\\u30FF\\u31F0-\\u31FF\\u32D0-\\u32FE\\u3300-\\u3357\\" +
-                            "uFF66-\\uFF6F\\uFF71-\\uFF9D\\uFF9E\\uFF9F]+$";
-        if(employeeNameKana.isEmpty()) {
-            response.put("ER001", "[カタカナ氏名] " +ER001);
-        }else if(employeeNameKana.length() > 125) {
-            response.put("ER006","[カタカナ氏名] " +ER006);
-        }else if(!employeeNameKana.matches(pattern)) {
-            response.put("ER009","[カタカナ氏名] " +ER009);
         }
         return response;
     }
