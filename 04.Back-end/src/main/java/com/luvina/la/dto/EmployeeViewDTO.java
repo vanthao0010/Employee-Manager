@@ -19,7 +19,7 @@ public class EmployeeViewDTO {
     private Long departmentId;
     private String departmentName;
     private String employeeEmail;
-    private String employeeTeleplone;
+    private String employeeTelephone;
     private String employeeNameKana;
     private String employeeLoginId;
     private List<CertificationViewDTO> certifications;

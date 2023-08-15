@@ -64,7 +64,7 @@ public class EmployeeController {
     public ResponseEntity<Map<String, Object>> addEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO,
                                                            @RequestParam(required = false) Long employeeId) {
         try {
-            Employee employee = iEmployeeService.addEmployee(employeeDetailDTO,null);
+            Employee employee = iEmployeeService.addorUpdateEmployee(employeeDetailDTO,null);
             Map<String, Object> response = new HashMap<>();
             response.put("code", "200");
             response.put("employeeId", employee.getEmployeeId());
@@ -92,7 +92,7 @@ public class EmployeeController {
     public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDetailDTO employeeDetailDTO,
                                                            @PathVariable Long employeeId) {
         try {
-            Employee employee = iEmployeeService.addEmployee(employeeDetailDTO,employeeId);
+            Employee employee = iEmployeeService.addorUpdateEmployee(employeeDetailDTO,employeeId);
             Map<String, Object> response = new HashMap<>();
             response.put("code", "200");
             response.put("employeeId", employee.getEmployeeId());

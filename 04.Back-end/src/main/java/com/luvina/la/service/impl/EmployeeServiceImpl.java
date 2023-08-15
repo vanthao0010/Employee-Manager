@@ -128,7 +128,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
      */
     @Override
     @Transactional
-    public Employee addEmployee(EmployeeDetailDTO employeeDetailDTO, Long employeeId) {
+    public Employee addorUpdateEmployee(EmployeeDetailDTO employeeDetailDTO, Long employeeId) {
         Employee employeeUpdate = new Employee();
         if(employeeId != null) {
             Optional<Employee> employeeOptional = employeeRepository.findByEmployeeId(employeeId);
@@ -175,11 +175,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
         }
         //check validate parameter employee login id
         String employeeLoginId = employeeDetailDTO.getEmployeeLoginId();
-        response = validateParameter
-                .validateEmployeeLoginId(employeeLoginId, employeeRepository.findByEmployeeLoginId(employeeLoginId));
-        System.out.println(response);
-        if(!response.isEmpty()) {
-            throw new ValidateException(response);
+        if(!employeeLoginId.equals(employeeUpdate.getEmployeeLoginId())) {
+            response = validateParameter
+                    .validateEmployeeLoginId(employeeLoginId, employeeRepository.findByEmployeeLoginId(employeeLoginId));
+            if(!response.isEmpty()) {
+                throw new ValidateException(response);
+            }
         }
         //check validate parameter employee login password
         String employeePassword = employeeDetailDTO.getEmployeeLoginPassword();
@@ -292,7 +293,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
             employeeDetail.setDepartmentId(employee.getDepartment().getDepartmentId());
             employeeDetail.setDepartmentName(employee.getDepartment().getDepartmentName());
             employeeDetail.setEmployeeEmail(employee.getEmployeeEmail());
-            employeeDetail.setEmployeeTeleplone(employee.getEmployeeTelephone());
+            employeeDetail.setEmployeeTelephone(employee.getEmployeeTelephone());
             employeeDetail.setEmployeeNameKana(employee.getEmployeeNameKana());
             employeeDetail.setEmployeeLoginId(employee.getEmployeeLoginId());
             List<EmployeeCertification> certifications = employeeCertificationRepository.findByEmployee(employee);

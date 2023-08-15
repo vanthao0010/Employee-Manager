@@ -26,7 +26,7 @@ public interface IEmployeeService {
                                                                 String ord_employee_name, String ord_certification_name,
                                                                 String ord_end_date);
 
-    public Employee addEmployee(EmployeeDetailDTO employeeDetailDTO, Long employeeId);
+    public Employee addorUpdateEmployee(EmployeeDetailDTO employeeDetailDTO, Long employeeId);
 
     public EmployeeViewDTO viewEmployeeDetail(Long employeeId);
 

@@ -32,8 +32,6 @@ export class UserListComponent {
   
   ngOnInit(): void {
     this.employeeService.getEmployee().subscribe((data) =>{
-      console.log("tong so page",this.getTotalPage())
-    
       this.totalRecord = data.totalRecords
       this.pageArray = Array.from({ length: this.getTotalPage() }, (_, index) => index + 1);
 
@@ -76,8 +74,7 @@ export class UserListComponent {
   }
   // function gọi đến pagingEmployee service để phân trang
   pagingEmployees(page:number) {
-    this.offset = page
-    console.log(this.offset)
+    this.offset = page  
     this.employeeService
       .pagingEmployees(this.employeeName, this.departmentId,page)
       .subscribe((data) => {

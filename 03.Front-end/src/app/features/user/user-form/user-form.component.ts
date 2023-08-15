@@ -86,12 +86,23 @@ export class UserFormComponent {
     
     // kiểm tra state trong router có rỗng hay không nếu không thì gán giá trị các formControlName để hiển thị lên template
     if(history.state.data) {
-      if(history.state.data instanceof String) {
+      const data = history.state.data
+      if(typeof(data) == 'number') {
+        this.employeeService.viewEmployeeDetail(data).subscribe((employeeDetail) => {
+          this.employeeDetail = employeeDetail
+          this.setValueForm(this.employeeDetail)
+        })
+        console.log(history.state.data)
+      }else if(typeof(data) == 'string') {
         this.error = history.state.data
       } else {
         this.employeeDetail = history.state.data
-        console.log(this.employeeDetail)
-        this.employeeForm.get('employeeLoginId').setValue(this.employeeDetail.employeeLoginId)
+        this.setValueForm(this.employeeDetail)
+      }
+    } 
+  }
+  setValueForm(employeeDetail : any) {
+    this.employeeForm.get('employeeLoginId').setValue(this.employeeDetail.employeeLoginId)
         this.employeeForm.get('employeeName').setValue(this.employeeDetail.employeeName)
         this.employeeForm.get('departmentId').setValue(this.employeeDetail.departmentId)
         this.employeeForm.get('employeeNameKana').setValue(this.employeeDetail.employeeNameKana)
@@ -105,10 +116,7 @@ export class UserFormComponent {
           this.employeeForm.get('certifications.certificationEndDate').setValue(new Date(this.employeeDetail.certifications[0].certificationStartDate))
           this.employeeForm.get('certifications.employeeCertificationScore').setValue(this.employeeDetail.certifications[0].employeeCertificationScore)
         }
-      }
-    } 
   }
-
   //check validate employeeLoginId
   isValidLoginId()  {
     const loginId = this.employeeForm.get('employeeLoginId').value
